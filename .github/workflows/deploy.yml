@@ -27,11 +27,14 @@ jobs:
       - name: Prepare deploy bundle
         run: |
           mkdir -p deploy
-          cp target/*.jar deploy/app.jar
+          echo "Jars in target/:"
+          ls -lh target/*.jar || true
+          JAR_FILE=$(ls -1 target/*.jar | grep -v 'original-' | head -n 1)
+          echo "Using jar: $JAR_FILE"
+          cp "$JAR_FILE" deploy/app.jar
           cp Procfile deploy/Procfile
           cd deploy
           zip -r ../deploy.zip .
-
       - name: Configure AWS credentials (VocLabs)
         uses: aws-actions/configure-aws-credentials@v4
         with:
